@@ -5,6 +5,7 @@ import os
 block_cipher = None
 SPEC_DIR = os.path.dirname(os.path.abspath(SPEC))
 ICON = os.path.join(SPEC_DIR, "assets", "icon.ico")
+VERSION = os.path.join(SPEC_DIR, "version_info.txt")
 
 a = Analysis(
     ["compagnon.py"],
@@ -49,4 +50,5 @@ exe = EXE(
     codesign_identity=None,
     entitlements_file=None,
     icon=ICON,
+    version=VERSION,
 )

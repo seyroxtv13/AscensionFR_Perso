@@ -159,4 +159,15 @@ AFRP.DB.Phrases = {
     ["Cooking"] = "Cuisine",
     ["First Aid"] = "Secourisme",
     ["Fishing"] = "Pêche",
+
+    -- Lot 1b — cast bar Tinker (captures écran joueur)
+    ["Construction: Restorative Beacon"] = "Construction : Balise réparatrice",
+    ["Construction: Sentry Turret"] = "Construction : Tourelle sentinelle",
+    ["Construction: Sentry tourelle"] = "Construction : Tourelle sentinelle",
+    ["Build: Restorative Beacon"] = "Construction : Balise réparatrice",
+    ["Build: Sentry Turret"] = "Construction : Tourelle sentinelle",
+    ["Discombobulate!"] = "Discombobuler !",
+    ["Déconcerter!"] = "Discombobuler !",
+    ["Deconstruct Sentry Turret"] = "Déconstruire la tourelle sentinelle",
+    ["Deconstruct Sentry tourelle"] = "Déconstruire la tourelle sentinelle",
 }
