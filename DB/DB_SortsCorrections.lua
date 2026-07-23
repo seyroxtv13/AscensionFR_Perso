@@ -5463,3 +5463,57 @@ aura(802828, "Spirit increased by 0.", "Esprit augmenté de 0.")
 aura(803581, "Healing receieved increased by 50%. Taking damage ends this effect.", "Les soins reçus ont augmenté de 50%. Prendre des dégâts met fin à cet effet.")
 aura(803883, "Shadow Resistance increased by 64. Attackers suffer 43 Shadow damage.", "Ombre Résistance augmentée de 64. Les attaquants subissent 43 Ombre dégâts.")
 aura(807271, "Whirling your blade around every 1 sec, dealing Weapon Damage plus 65 to nearby enemies.", "Faites tourner votre lame toutes les 1 s, infligeant des dégâts d'arme plus 65 aux ennemis proches.")
+
+-- ============================================================================
+-- Rapport Seyrox 23/07/2026 — échecs d'alignement + récolte (buffs Tinker / Folie)
+-- ============================================================================
+
+-- Folie : le buff affiché n'est plus le pavé Insanity, mais cette ligne courte.
+aura(500706,
+    "If this reaches 100 stacks, you will lose your mind.",
+    "Si ceci atteint 100 cumuls, vous perdrez la raison.")
+
+-- Malédiction de vengeance (aura sur la cible)
+aura(2101864, "Haunted...", "Hanté...")
+
+-- Reconstruction par nanorobots (tick de soin sur le buff)
+aura(502557,
+    "Healing for 56 every sec.",
+    "Rend 56 points de vie toutes les secondes.")
+
+-- Récoltés (absents de DB_Sorts) — fiches minimales + auras
+DB[503553] = {
+    N = "Eureka !",
+    D = "Augmente les dégâts de |cffffffffTir de réparation|r de 30 %.",
+    DE = "Increases the damage of |cffffffffRepair Shot|r by 30%.",
+}
+aura(503553,
+    "Increases the damage of Repair Shot by 30%.",
+    "Augmente les dégâts de Tir de réparation de 30 %.")
+
+DB[706255] = {
+    N = "Gaz rajeunissant",
+    D = "Rend des points de vie périodiquement.",
+    DE = "Healing over time.",
+}
+aura(706255,
+    "Healing for 56 every 2 sec.",
+    "Rend 56 points de vie toutes les 2 secondes.")
+
+DB[560709] = {
+    N = "Surcharge : Balise de protection",
+    D = "Absorbe les dégâts.",
+    DE = "Absorbs damage.",
+}
+aura(560709,
+    "Absorbs 415 damage.",
+    "Absorbe 415 points de dégâts.")
+
+DB[806158] = {
+    N = "En bonne santé",
+    D = "Immunisé contre le poison, les maladies et les saignements.",
+    DE = "Immune to Poison, Disease and Bleed effects.",
+}
+aura(806158,
+    "Immune to Poison, Disease and Bleed effects.",
+    "Immunisé contre le poison, les maladies et les saignements.")

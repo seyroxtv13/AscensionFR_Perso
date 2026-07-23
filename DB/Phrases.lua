@@ -196,4 +196,15 @@ AFRP.DB.Phrases = {
     ["Déconcerter!"] = "Discombobuler !",
     ["Deconstruct Sentry Turret"] = "Déconstruire la tourelle sentinelle",
     ["Deconstruct Sentry tourelle"] = "Déconstruire la tourelle sentinelle",
+
+    -- Lot 005 — rapport signalement 23/07/2026
+    ["If this reaches 100 stacks, you will lose your mind."] =
+        "Si ceci atteint 100 cumuls, vous perdrez la raison.",
+    ["Haunted..."] = "Hanté...",
+    ["Eureka!"] = "Eureka !",
+    ["Rejuvenating Gas"] = "Gaz rajeunissant",
+    ["Healthy"] = "En bonne santé",
+    ["Overcharge: Shield Beacon"] = "Surcharge : Balise de protection",
+    ["Nanobot Reconstruction"] = "Reconstruction par nanorobots",
+    ["Nanobots"] = "Nanorobots",
 }

@@ -750,6 +750,25 @@ local function TraduireDuree(tooltip)
                     break
                 end
             end
+            -- Soins périodiques génériques (« Healing for 56 every sec. »)
+            local n = string.match(texte, "^Healing for (%d+) every sec%.$")
+            if n then
+                ligne:SetText("Rend " .. n .. " points de vie toutes les secondes.")
+                modifie = true
+            else
+                local n2, s = string.match(texte,
+                    "^Healing for (%d+) every (%d+) sec%.$")
+                if n2 then
+                    ligne:SetText("Rend " .. n2
+                        .. " points de vie toutes les " .. s .. " secondes.")
+                    modifie = true
+                end
+            end
+            -- Filet Divers / Phrases (exact)
+            if AFR.DB and AFR.DB.Divers and AFR.DB.Divers[texte] then
+                ligne:SetText(AFR.DB.Divers[texte])
+                modifie = true
+            end
         end
     end
     if modifie and tooltip:IsShown() then tooltip:Show() end
