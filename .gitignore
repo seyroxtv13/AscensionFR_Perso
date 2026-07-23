@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+compagnon/build/
+compagnon/dist/
+dist/*.exe
+.DS_Store
+*.log

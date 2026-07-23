@@ -1,0 +1,11 @@
+## Interface: 30300
+## Title: Ascension |cff0099ffFR|r Perso
+## Notes: Overlay de corrections FR personnelles (complète AscensionFR sans être écrasé par ses mises à jour)
+## Author: Seyrox
+## Version: 0.1.0
+## OptionalDeps: AscensionFR
+## SavedVariables: AscensionFR_PersoDB
+
+Core.lua
+DB\Phrases.lua
+Modules\UI.lua
