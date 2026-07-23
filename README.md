@@ -3,44 +3,50 @@
 Overlay de corrections françaises pour Project Ascension.  
 Fonctionne **à côté** de [AscensionFR](https://github.com/LePetitDan/AscensionFR) : les mises à jour officielles **n’écrasent pas** tes corrects.
 
-## Installation
+## Conflit avec AscensionFR officiel ?
 
-1. Installe **AscensionFR** (officiel).
-2. Installe **AscensionFR_Perso** :
-   - **Compagnon** : lance `AscensionFR_Perso_Compagnon.exe` → choisis le dossier `ascension-live` → Installer ; ou
-   - **Manuel** : extrais `AscensionFR_Perso.zip` dans le dossier du jeu (fusionner `Interface`).
-3. Écran de sélection des personnages → **AddOns** → coche *Load Out of Date AddOns* → coche **AscensionFR_Perso**.
-4. En jeu : `/reload` puis `/afrp` pour le statut.
+**Non**, en usage normal :
 
-Windows SmartScreen peut bloquer l’exe non signé : *Informations complémentaires* → *Exécuter quand même*.
+| | AscensionFR | AscensionFR Perso |
+|---|---|---|
+| Dossier | `AddOns/AscensionFR` | `AddOns/AscensionFR_Perso` |
+| Rôle | Base complète | Petites corrections manquantes |
+| Maj | Via leur Compagnon | Via **ton** Compagnon (ce repo) |
 
-## Contenu MVP (0.1.0)
+Perso ne touche **jamais** aux fichiers officiels. `OptionalDeps: AscensionFR` le charge après, pour surcharger seulement les phrases exactes de `DB/Phrases.lua` (ex. `Agility`, `Haste Rating`).
 
-- Phrases UI manquantes : **Agility** → Agilité, **Haste Rating** → Score de hâte (+ stats voisines).
-- Commandes : `/afrp`, `/afrp on`, `/afrp off`.
+## Installation / maj
+
+1. Garde **AscensionFR** officiel.
+2. Lance `AscensionFR_Perso_Compagnon.exe` (release) → il trouve le jeu et installe/maj **Perso seul**.
+3. Après ta session de jeu : AddOns → Perso coché → `/reload` (ou relance si nouvel addon).
+
+[Releases](https://github.com/seyroxtv13/AscensionFR_Perso/releases)
+
+## En jeu
+
+- `/afrp` — panneau options  
+- `/afrp on` / `/afrp off` — active / coupe l’overlay  
+- `/afrp status` — résumé chat  
 
 ## Ajouter une traduction
 
-Édite `DB/Phrases.lua` :
-
 ```lua
+-- DB/Phrases.lua
 ["Texte anglais exact"] = "Texte français",
 ```
 
-Incrémente `## Version` dans le `.toc`, publie une release avec un nouvel `AscensionFR_Perso.zip`.
+Puis bump `## Version` + publish release.
 
-## Compagnon (dev)
+## Dev Compagnon
 
 ```text
 cd compagnon
 pip install pyinstaller
 python -m PyInstaller AscensionFR_Perso_Compagnon.spec
+powershell -File ..\scripts\publish_release.ps1
 ```
-
-L’exe sort dans `compagnon/dist/`. Variable optionnelle : `AFRP_DEPOT=seyroxtv13/AscensionFR_Perso`.
-
-Release : `powershell -File scripts\publish_release.ps1`
 
 ## Licence
 
-Projet perso / communautaire. Non affilié à Blizzard ni Project Ascension.
+Projet perso. Non affilié à Blizzard / Project Ascension / AscensionFR officiel.

@@ -3,7 +3,7 @@
 param(
   [string]$Owner = "",
   [string]$Repo = "AscensionFR_Perso",
-  [string]$Tag = "v0.1.0"
+  [string]$Tag = "v0.2.0"
 )
 $ErrorActionPreference = "Stop"
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
