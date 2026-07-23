@@ -37,7 +37,9 @@ pip install pyinstaller
 python -m PyInstaller AscensionFR_Perso_Compagnon.spec
 ```
 
-L’exe sort dans `compagnon/dist/`. Variable optionnelle : `AFRP_DEPOT=Toi/AscensionFR_Perso`.
+L’exe sort dans `compagnon/dist/`. Variable optionnelle : `AFRP_DEPOT=seyroxtv13/AscensionFR_Perso`.
+
+Release : `powershell -File scripts\publish_release.ps1`
 
 ## Licence
 

@@ -18,7 +18,7 @@ import tempfile
 import shutil
 
 # À adapter si ton dépôt GitHub a un autre nom / propriétaire.
-DEPOT = os.environ.get("AFRP_DEPOT", "Seyrox/AscensionFR_Perso")
+DEPOT = os.environ.get("AFRP_DEPOT", "seyroxtv13/AscensionFR_Perso")
 API_RELEASE = f"https://api.github.com/repos/{DEPOT}/releases/latest"
 PAGE_RELEASES = f"https://github.com/{DEPOT}/releases"
 ZIP_ATTENDU = "AscensionFR_Perso.zip"

@@ -1,0 +1,9 @@
+﻿AscensionFR Perso v0.1.0 — assets de release
+============================================
+1. Connecte GitHub :  gh auth login
+2. Publie :           powershell -File scripts\publish_release.ps1
+
+Ou upload manuel sur github.com → New repository AscensionFR_Perso → Releases → Draft
+Fichiers à joindre :
+- AscensionFR_Perso.zip
+- AscensionFR_Perso_Compagnon.exe
