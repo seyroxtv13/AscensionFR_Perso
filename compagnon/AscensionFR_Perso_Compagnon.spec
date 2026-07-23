@@ -1,13 +1,19 @@
-# -*- mode: python ; coding: utf-8 -*-
+﻿# -*- mode: python ; coding: utf-8 -*-
 # PyInstaller : python -m PyInstaller AscensionFR_Perso_Compagnon.spec
+import os
 
 block_cipher = None
+SPEC_DIR = os.path.dirname(os.path.abspath(SPEC))
+ICON = os.path.join(SPEC_DIR, "assets", "icon.ico")
 
 a = Analysis(
-    ['compagnon.py'],
-    pathex=[],
+    ["compagnon.py"],
+    pathex=[SPEC_DIR],
     binaries=[],
-    datas=[('assets/icon.ico', 'assets'), ('assets/icon.png', 'assets')],
+    datas=[
+        (os.path.join(SPEC_DIR, "assets", "icon.ico"), "assets"),
+        (os.path.join(SPEC_DIR, "assets", "icon.png"), "assets"),
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -27,11 +33,11 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name='AscensionFR_Perso_Compagnon',
+    name="AscensionFR_Perso_Compagnon",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
-    upx=True,
+    upx=False,
     upx_exclude=[],
     runtime_tmpdir=None,
     console=False,
@@ -40,5 +46,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    icon='assets/icon.ico',
+    icon=ICON,
 )

@@ -26,7 +26,7 @@ PAGE_REPO = f"https://github.com/{DEPOT}"
 ZIP_ATTENDU = "AscensionFR_Perso.zip"
 ADDON_NAME = "AscensionFR_Perso"
 OFFICIEL = "AscensionFR"
-VERSION_COMPAGNON = "0.2.1"
+VERSION_COMPAGNON = "0.2.2"
 UA = {"User-Agent": "AscensionFR-Perso-Compagnon/0.2"}
 
 CONFIG_DIR = os.path.join(os.environ.get("APPDATA", "."), "AscensionFR_Perso")
