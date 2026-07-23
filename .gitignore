@@ -3,5 +3,10 @@ __pycache__/
 compagnon/build/
 compagnon/dist/
 dist/*.exe
+release/
 .DS_Store
 *.log
+scripts/_debug_*.py
+scripts/_scan_*.py
+
+compagnon/assets/icon_fr_old.png

@@ -13,6 +13,8 @@ a = Analysis(
     datas=[
         (os.path.join(SPEC_DIR, "assets", "icon.ico"), "assets"),
         (os.path.join(SPEC_DIR, "assets", "icon.png"), "assets"),
+        (os.path.join(SPEC_DIR, "assets", "crest.png"), "assets"),
+        (os.path.join(SPEC_DIR, "assets", "ui"), "assets/ui"),
     ],
     hiddenimports=[],
     hookspath=[],

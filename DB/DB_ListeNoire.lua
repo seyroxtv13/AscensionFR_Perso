@@ -1,0 +1,55 @@
+-- Fichier généré par outils/generer_listenoire.py - NE PAS ÉDITER.
+--
+-- Ces chaînes d'interface sont lues par du code de Blizzard qui
+-- manipule des éléments protégés (barres d'action, boutons d'objets
+-- de quête...). Les traduire contamine le chemin d'exécution et le
+-- jeu refuse alors les actions du joueur :
+--   « AddOn 'AscensionFR' tainted the call of the secure function
+--     'UseAction()' » -> barres d'action bloquées.
+-- Elles restent donc en anglais, volontairement.
+local DB = AscensionFR.DB.ListeNoire
+DB["BATTLENET_NAME_FORMAT"]=true -- UnitPopup.lua (UnitPopup_OnClick)
+DB["BENCHMARK_TAXI_MODE_OFF"]=true -- UIParent.lua (UIParent_OnEvent)
+DB["BENCHMARK_TAXI_MODE_ON"]=true -- UIParent.lua (UIParent_OnEvent)
+DB["BINDING_NAME_DISMOUNT"]=true -- PetPaperDollFrame.lua (PetPaperDollFrame_UpdateCompanions)
+DB["BNET_REPORT"]=true -- FriendsFrame.lua (PendingListFrameDropDown_Initialize)
+DB["CANCEL"]=true -- BonusActionBarFrame.lua (PossessButton_OnEnter)
+DB["COMPANIONS"]=true -- PetPaperDollFrame.lua (PetPaperDollFrame_SetTab)
+DB["DEAD"]=true -- PartyMemberFrame.lua (PartyMemberFrame_OnLoad)
+DB["DEATH_CORPSE_SKINNED"]=true -- UIParent.lua (UIParent_OnEvent)
+DB["GM_CHAT_LAST_SESSION"]=true -- UIParent.lua (UIParent_OnEvent)
+DB["GROUP"]=true -- PlayerFrame.lua (PlayerFrame_UpdateGroupIndicator)
+DB["HEALTH"]=true -- CharacterFrame.lua (CharacterFrame_OnLoad)
+DB["INTERFACE_ACTION_BLOCKED"]=true -- UIParent.lua (UIParent_OnEvent)
+DB["LOOT_NO_DROP"]=true -- UIParent.lua (UIParent_OnEvent)
+DB["LOOT_NO_DROP_DISENCHANT"]=true -- UIParent.lua (UIParent_OnEvent)
+DB["MANA"]=true -- CharacterFrame.lua (CharacterFrame_OnLoad)
+DB["MERCHANT_PAGE_NUMBER"]=true -- PetPaperDollFrame.lua (PetPaperDollFrame_SetCompanionPage)
+DB["MOUNT"]=true -- PetPaperDollFrame.lua (PetPaperDollFrame_UpdateCompanions)
+DB["MOUNTS"]=true -- PetPaperDollFrame.lua (PetPaperDollFrame_SetTab)
+DB["NEWBIE_TOOLTIP_HEALTHBAR"]=true -- UnitFrame.lua (UnitFrameHealthBar_Initialize)
+DB["NEWBIE_TOOLTIP_PARTYOPTIONS"]=true -- UnitFrame.lua (UnitFrame_OnEnter)
+DB["NEWBIE_TOOLTIP_PLAYEROPTIONS"]=true -- UnitFrame.lua (UnitFrame_OnEnter)
+DB["NEWBIE_TOOLTIP_PVPFFA"]=true -- PlayerFrame.lua (PlayerFrame_UpdatePvPStatus)
+DB["OPT_OUT_LOOT_TITLE"]=true -- UnitPopup.lua (UnitPopup_ShowMenu)
+DB["PARTY_OPTIONS_LABEL"]=true -- UnitFrame.lua (UnitFrame_OnEnter)
+DB["PET_DAMAGE_PERCENTAGE"]=true -- PetFrame.lua (PetFrame_SetHappiness)
+DB["PET_DISMISS"]=true -- PetPaperDollFrame.lua (PetPaperDollFrame_UpdateCompanions)
+DB["PLAYER_LEVEL_UP"]=true -- UIParent.lua (UIParent_OnEvent)
+DB["PLAYER_OPTIONS_LABEL"]=true -- UnitFrame.lua (UnitFrame_OnEnter)
+DB["PLAYTIME_TIRED"]=true -- PlayerFrame.lua (PlayerFrame_UpdatePlaytime)
+DB["PLAYTIME_UNHEALTHY"]=true -- PlayerFrame.lua (PlayerFrame_UpdatePlaytime)
+DB["PVPFFA"]=true -- PlayerFrame.lua (PlayerFrame_UpdatePvPStatus)
+DB["RAF_SUMMON"]=true -- UnitPopup.lua (UnitPopup_ShowMenu)
+DB["RAF_SUMMON_WITH_COOLDOWN"]=true -- UnitPopup.lua (UnitPopup_ShowMenu)
+DB["RAID_INSTANCE_WELCOME"]=true -- UIParent.lua (UIParent_OnEvent)
+DB["RAID_INSTANCE_WELCOME_EXTENDED"]=true -- UIParent.lua (UIParent_OnEvent)
+DB["RAID_INSTANCE_WELCOME_LOCKED"]=true -- UIParent.lua (UIParent_OnEvent)
+DB["RAID_INSTANCE_WELCOME_LOCKED_EXTENDED"]=true -- UIParent.lua (UIParent_OnEvent)
+DB["RAID_TARGET_ICON"]=true -- TargetFrame.lua (TargetFrameDropDown_Initialize)
+DB["SET_FOCUS"]=true -- TargetFrame.lua (FocusFrameDropDown_Initialize)
+DB["SPELL_PASSIVE"]=true -- Ascension_Spellbook.lua (SpellButtonMixin:SetSpell)
+DB["SUMMON"]=true -- PetPaperDollFrame.lua (PetPaperDollFrame_UpdateCompanions)
+DB["UNIT_TYPE_LEVEL_TEMPLATE"]=true -- PetPaperDollFrame.lua (PetPaperDollFrame_Update)
+DB["UNKNOWN"]=true -- UnitPopup.lua (UnitPopup_ShowMenu)
+DB["UNKNOWNOBJECT"]=true -- UnitPopup.lua (UnitPopup_HideButtons)

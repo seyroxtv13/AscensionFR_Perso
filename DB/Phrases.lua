@@ -1,42 +1,162 @@
 -- ============================================================================
--- Phrases exactes EN -> FR (overlay). Ajouter une ligne = une correction.
+-- Phrases exactes EN -> FR (surcharge Divers via PersoBoot).
+-- Vocabulaire aligné sur le client WoW FR (WotLK / Ascension).
+-- Lot 1 — stats, liaisons, châsses, libellés d'info-bulles courants.
 -- ============================================================================
-
 local AFRP = AscensionFR_Perso
 AFRP.DB = AFRP.DB or {}
 
-local P = {
-    -- Stats (capture : fiche / objets)
+AFRP.DB.Phrases = {
+    -- Attributs de base
     ["Agility"] = "Agilité",
     ["Strength"] = "Force",
     ["Stamina"] = "Endurance",
     ["Intellect"] = "Intelligence",
     ["Spirit"] = "Esprit",
-    ["Haste Rating"] = "Score de hâte",
-    ["Hit Rating"] = "Score de toucher",
-    ["Critical Strike Rating"] = "Score de coup critique",
-    ["Crit Rating"] = "Score de crit",
-    ["Expertise Rating"] = "Score d'expertise",
-    ["Dodge Rating"] = "Score d'esquive",
-    ["Parry Rating"] = "Score de parade",
-    ["Defense Rating"] = "Score de défense",
-    ["Armor Penetration Rating"] = "Score de pénétration d'armure",
-    ["Spell Power"] = "Puissance des sorts",
-    ["Attack Power"] = "Puissance d'attaque",
-    ["Armor"] = "Armure",
-    ["Resilience Rating"] = "Score de résilience",
-    ["Mana Regeneration"] = "Régénération de mana",
-    ["Health Regeneration"] = "Régénération de vie",
-
-    -- Variantes avec deux-points (souvent affichées ainsi)
     ["Agility:"] = "Agilité :",
-    ["Haste Rating:"] = "Score de hâte :",
-    ["Hit Rating:"] = "Score de toucher :",
-    ["Critical Strike Rating:"] = "Score de coup critique :",
     ["Strength:"] = "Force :",
     ["Stamina:"] = "Endurance :",
     ["Intellect:"] = "Intelligence :",
     ["Spirit:"] = "Esprit :",
-}
 
-AFRP.DB.Phrases = P
+    -- Scores de combat (WotLK)
+    ["Haste Rating"] = "Score de hâte",
+    ["Hit Rating"] = "Score de toucher",
+    ["Critical Strike Rating"] = "Score de coup critique",
+    ["Crit Rating"] = "Score de coup critique",
+    ["Expertise Rating"] = "Score d'expertise",
+    ["Dodge Rating"] = "Score d'esquive",
+    ["Parry Rating"] = "Score de parade",
+    ["Block Rating"] = "Score de blocage",
+    ["Defense Rating"] = "Score de défense",
+    ["Armor Penetration Rating"] = "Score de pénétration d'armure",
+    ["Armor Penetration"] = "Pénétration d'armure",
+    ["Spell Penetration"] = "Pénétration des sorts",
+    ["Resilience Rating"] = "Score de résilience",
+    ["Resilience"] = "Résilience",
+    ["Spell Power"] = "Puissance des sorts",
+    ["Attack Power"] = "Puissance d'attaque",
+    ["Ranged Attack Power"] = "Puissance d'attaque à distance",
+    ["Armor"] = "Armure",
+    ["Mana Regeneration"] = "Régénération de mana",
+    ["Health Regeneration"] = "Régénération de vie",
+    ["Health"] = "Points de vie",
+    ["Mana"] = "Mana",
+    ["Damage"] = "Dégâts",
+    ["DPS"] = "DPS",
+    ["Speed"] = "Vitesse",
+
+    ["Haste Rating:"] = "Score de hâte :",
+    ["Hit Rating:"] = "Score de toucher :",
+    ["Critical Strike Rating:"] = "Score de coup critique :",
+    ["Expertise Rating:"] = "Score d'expertise :",
+    ["Dodge Rating:"] = "Score d'esquive :",
+    ["Parry Rating:"] = "Score de parade :",
+    ["Block Rating:"] = "Score de blocage :",
+    ["Defense Rating:"] = "Score de défense :",
+    ["Armor Penetration Rating:"] = "Score de pénétration d'armure :",
+    ["Spell Power:"] = "Puissance des sorts :",
+    ["Attack Power:"] = "Puissance d'attaque :",
+    ["Resilience Rating:"] = "Score de résilience :",
+
+    -- Résistances
+    ["Fire Resistance"] = "Résistance au Feu",
+    ["Frost Resistance"] = "Résistance au Givre",
+    ["Nature Resistance"] = "Résistance à la Nature",
+    ["Shadow Resistance"] = "Résistance à l'Ombre",
+    ["Arcane Resistance"] = "Résistance aux Arcanes",
+    ["Holy Resistance"] = "Résistance au Sacré",
+
+    -- Liaisons / exigences (libellés d'objets)
+    ["Binds when picked up"] = "Lié quand ramassé",
+    ["Binds when equipped"] = "Lié quand équipé",
+    ["Binds when used"] = "Lié quand utilisé",
+    ["Soulbound"] = "Lié",
+    ["Unique"] = "Unique",
+    ["Unique-Equipped"] = "Unique - équipé",
+    ["Requires Level"] = "Niveau requis",
+    ["Requires level"] = "Niveau requis",
+    ["Classes:"] = "Classes :",
+    ["Races:"] = "Races :",
+    ["Requires"] = "Requiert",
+    ["Durability"] = "Durabilité",
+    ["Slot"] = "Emplacement",
+
+    -- Préfixes d'effet
+    ["Equip:"] = "Équipé :",
+    ["Use:"] = "Utilise :",
+    ["Chance on hit:"] = "Chances quand vous touchez :",
+    ["Chance on hit"] = "Chances quand vous touchez",
+
+    -- Châsses
+    ["Red Socket"] = "Châsse rouge",
+    ["Yellow Socket"] = "Châsse jaune",
+    ["Blue Socket"] = "Châsse bleue",
+    ["Meta Socket"] = "Méta-châsse",
+    ["Prismatic Socket"] = "Châsse prismatique",
+    ["Socket Bonus:"] = "Bonus de châsse :",
+    ["Socket Bonus"] = "Bonus de châsse",
+    ["Requires more"] = "En nécessite davantage",
+
+    -- Armures / types
+    ["Cloth"] = "Tissu",
+    ["Leather"] = "Cuir",
+    ["Mail"] = "Mailles",
+    ["Plate"] = "Plaques",
+    ["Shield"] = "Bouclier",
+    ["Held In Off-hand"] = "Tenu en main gauche",
+    ["Two-Hand"] = "Deux mains",
+    ["One-Hand"] = "À une main",
+    ["Main Hand"] = "Main droite",
+    ["Off Hand"] = "Main gauche",
+    ["Ranged"] = "À distance",
+    ["Thrown"] = "Armes de jet",
+    ["Projectile"] = "Projectile",
+    ["Relic"] = "Relique",
+    ["Idol"] = "Idole",
+    ["Totem"] = "Totem",
+    ["Libram"] = "Libram",
+    ["Sigil"] = "Cachet",
+
+    -- Qualités / états courants
+    ["Quest Item"] = "Objet de quête",
+    ["Quest item"] = "Objet de quête",
+    ["This item begins a quest"] = "Cet objet permet de commencer une quête",
+    ["Already known"] = "Déjà connu",
+    ["Requires Fishing"] = "Requiert Pêche",
+    ["Requires Cooking"] = "Requiert Cuisine",
+    ["Requires First Aid"] = "Requiert Secourisme",
+    ["Locked"] = "Verrouillé",
+    ["Unlocked"] = "Déverrouillé",
+    ["Empty"] = "Vide",
+    ["Conjured Item"] = "Objet invoqué",
+    ["Conjured item"] = "Objet invoqué",
+
+    -- Combat / UI court
+    ["Out of range"] = "Hors de portée",
+    ["Not enough mana"] = "Pas assez de mana",
+    ["Target needs to be in front of you."] = "La cible doit être devant vous.",
+    ["You are too far away."] = "Vous êtes trop loin.",
+    ["Invalid target"] = "Cible incorrecte",
+    ["Another action is in progress"] = "Une autre action est en cours",
+    ["Item is not ready yet."] = "L'objet n'est pas encore prêt.",
+    ["Spell is not ready yet."] = "Le sort n'est pas encore prêt.",
+    ["You can't do that yet."] = "Vous ne pouvez pas encore faire cela.",
+    ["You must be facing your target."] = "Vous devez faire face à votre cible.",
+
+    -- Métiers (libellés courts)
+    ["Alchemy"] = "Alchimie",
+    ["Blacksmithing"] = "Forge",
+    ["Enchanting"] = "Enchantement",
+    ["Engineering"] = "Ingénierie",
+    ["Herbalism"] = "Herboristerie",
+    ["Inscription"] = "Calligraphie",
+    ["Jewelcrafting"] = "Joaillerie",
+    ["Leatherworking"] = "Travail du cuir",
+    ["Mining"] = "Minage",
+    ["Skinning"] = "Dépeçage",
+    ["Tailoring"] = "Couture",
+    ["Cooking"] = "Cuisine",
+    ["First Aid"] = "Secourisme",
+    ["Fishing"] = "Pêche",
+}
