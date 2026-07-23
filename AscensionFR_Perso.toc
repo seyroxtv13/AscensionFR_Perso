@@ -2,7 +2,7 @@
 ## Title: Ascension |cffc47030FR|r |cffffd100Perso|r
 ## Notes: Traduction francaise autonome pour Project Ascension
 ## Author: Seyrox
-## Version: 1.0.3
+## Version: 1.0.4
 ## DefaultState: enabled
 ## SavedVariables: AscensionFR_PersoDB
 ## IconTexture: Interface\Icons\INV_Misc_Book_11

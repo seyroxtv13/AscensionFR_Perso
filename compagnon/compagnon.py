@@ -390,8 +390,10 @@ class App(tk.Tk):
         else:
             self.afficher(
                 "Prêt à jouer",
-                f"Perso {inst} est installé.",
-                hint, OK, "ok",
+                f"Perso {inst} est installé"
+                + (f" (dernière : {derniere})." if derniere else "."),
+                hint + "\nLe bouton réinstalle depuis GitHub (pas besoin de télécharger le zip à la main).",
+                OK, "ok",
             )
 
     def lancer_maj(self):
