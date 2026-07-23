@@ -1,8 +1,8 @@
 ## Interface: 30300
 ## Title: Ascension |cff0099ffFR|r Perso
-## Notes: Overlay FR personnel (complete AscensionFR, non ecrase par ses maj)
+## Notes: Overlay FR professionnel (complete AscensionFR, non ecrase par ses maj)
 ## Author: Seyrox
-## Version: 0.2.0
+## Version: 0.3.0
 ## OptionalDeps: AscensionFR
 ## DefaultState: enabled
 ## SavedVariables: AscensionFR_PersoDB

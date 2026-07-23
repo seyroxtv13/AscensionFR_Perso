@@ -33,7 +33,7 @@ exe = EXE(
     a.zipfiles,
     a.datas,
     [],
-    name="AscensionFR_Perso_Compagnon",
+    name="AscensionFR_Perso",
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,

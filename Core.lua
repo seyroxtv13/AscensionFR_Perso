@@ -6,7 +6,7 @@ local function trim(s)
     return (string.gsub(s or "", "^%s*(.-)%s*$", "%1"))
 end
 
-AFRP.VERSION = GetAddOnMetadata("AscensionFR_Perso", "Version") or "0.2.0"
+AFRP.VERSION = GetAddOnMetadata("AscensionFR_Perso", "Version") or "0.3.0"
 AFRP.DB = AFRP.DB or {}
 
 local function Actif()

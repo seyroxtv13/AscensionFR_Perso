@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-AscensionFR Perso — Compagnon
+AscensionFR Perso — Compagnon 0.3
 Installe / met à jour UNIQUEMENT AscensionFR_Perso.
-Ne touche jamais au dossier AscensionFR officiel.
 """
 from __future__ import annotations
 
@@ -24,36 +23,36 @@ API_RELEASE = f"https://api.github.com/repos/{DEPOT}/releases/latest"
 PAGE_RELEASES = f"https://github.com/{DEPOT}/releases"
 PAGE_REPO = f"https://github.com/{DEPOT}"
 ZIP_ATTENDU = "AscensionFR_Perso.zip"
+# Nouveau nom propre (évite le cache d’icône Windows des anciens .exe)
+EXE_NOMS = ("AscensionFR_Perso.exe", "AscensionFR_Perso_Compagnon.exe")
 ADDON_NAME = "AscensionFR_Perso"
 OFFICIEL = "AscensionFR"
-VERSION_COMPAGNON = "0.2.2"
-UA = {"User-Agent": "AscensionFR-Perso-Compagnon/0.2"}
+VERSION_COMPAGNON = "0.3.0"
+UA = {"User-Agent": "AscensionFR-Perso-Compagnon/0.3"}
 
 CONFIG_DIR = os.path.join(os.environ.get("APPDATA", "."), "AscensionFR_Perso")
 CONFIG = os.path.join(CONFIG_DIR, "compagnon.json")
 
+FOND = "#07090c"
+CARTE = "#10141a"
+CARTE2 = "#171c24"
+LISERE = "#2c3440"
+TEXTE = "#f3f5f7"
+MUTE = "#8b939e"
+ACCENT = "#f0c14b"
+ACCENT2 = "#c9a227"
+VERT = "#3dd68c"
+ORANGE = "#f5a524"
+ROUGE = "#ff6b6b"
+BLEU = "#5eb1ff"
+
 
 def ressource(*parts):
-    """Fichier embarqué (PyInstaller) ou voisin du script."""
     if getattr(sys, "frozen", False):
         base = getattr(sys, "_MEIPASS", os.path.dirname(sys.executable))
     else:
         base = os.path.dirname(os.path.abspath(__file__))
     return os.path.join(base, *parts)
-
-# Palette launcher sombre + or (proche AscensionFR, plus épurée)
-FOND = "#0a0c0f"
-CARTE = "#12151a"
-CARTE2 = "#181c22"
-LISERE = "#2a3038"
-TEXTE = "#f0f2f5"
-MUTE = "#8a929c"
-ACCENT = "#f0c14b"
-ACCENT2 = "#d4a017"
-VERT = "#3dd68c"
-ORANGE = "#f5a524"
-ROUGE = "#ff6b6b"
-BLEU = "#5eb1ff"
 
 
 def charger_config():
@@ -106,19 +105,22 @@ def derniere_release():
     with urllib.request.urlopen(req, timeout=20) as r:
         infos = json.loads(r.read().decode("utf-8"))
     version = (infos.get("tag_name") or "").lstrip("vV")
-    url_zip = None
+    url_zip = url_exe = None
     for asset in infos.get("assets") or []:
-        if asset.get("name") == ZIP_ATTENDU:
-            url_zip = asset.get("browser_download_url")
-            break
-    return version, url_zip, (infos.get("body") or "").strip()
+        name = asset.get("name") or ""
+        url = asset.get("browser_download_url")
+        if name == ZIP_ATTENDU:
+            url_zip = url
+        if name in EXE_NOMS and not url_exe:
+            url_exe = url
+    return version, url_zip, url_exe, (infos.get("body") or "").strip()
 
 
-def telecharger(url, progres=None):
+def telecharger(url, progres=None, suffixe=".bin"):
     req = urllib.request.Request(url, headers=UA)
-    with urllib.request.urlopen(req, timeout=120) as r:
+    with urllib.request.urlopen(req, timeout=180) as r:
         total = int(r.headers.get("Content-Length") or 0)
-        fd, chemin = tempfile.mkstemp(suffix=".zip")
+        fd, chemin = tempfile.mkstemp(suffix=suffixe)
         os.close(fd)
         fait = 0
         with open(chemin, "wb") as out:
@@ -134,48 +136,38 @@ def telecharger(url, progres=None):
 
 
 def installer_zip(chemin_zip, jeu):
-    """Écrit uniquement Interface/AddOns/AscensionFR_Perso — jamais AscensionFR."""
     addons = os.path.join(jeu, "Interface", "AddOns")
     os.makedirs(addons, exist_ok=True)
     cible = os.path.join(addons, ADDON_NAME)
     with zipfile.ZipFile(chemin_zip) as z:
         noms = [n.replace("\\", "/") for n in z.namelist()]
-        if any(n.startswith("Interface/AddOns/") for n in noms):
-            # Extraction ciblée : seulement notre addon
-            tmp = tempfile.mkdtemp(prefix="afrp_")
-            try:
-                z.extractall(tmp)
+        tmp = tempfile.mkdtemp(prefix="afrp_")
+        try:
+            z.extractall(tmp)
+            if any(n.startswith("Interface/AddOns/") for n in noms):
                 src = os.path.join(tmp, "Interface", "AddOns", ADDON_NAME)
-                if not os.path.isdir(src):
-                    raise RuntimeError("Zip invalide : dossier AscensionFR_Perso manquant.")
-                if os.path.isdir(cible):
-                    shutil.rmtree(cible)
-                shutil.copytree(src, cible)
-            finally:
-                shutil.rmtree(tmp, ignore_errors=True)
-        else:
-            tmp = tempfile.mkdtemp(prefix="afrp_")
-            try:
-                z.extractall(tmp)
+            else:
                 src = os.path.join(tmp, ADDON_NAME)
                 if not os.path.isdir(src):
                     src = tmp
-                if os.path.isdir(cible):
-                    shutil.rmtree(cible)
-                if os.path.basename(os.path.normpath(src)) == ADDON_NAME:
-                    shutil.copytree(src, cible)
-                else:
-                    os.makedirs(cible, exist_ok=True)
-                    for nom in os.listdir(src):
-                        s, d = os.path.join(src, nom), os.path.join(cible, nom)
-                        if os.path.isdir(s):
-                            if os.path.isdir(d):
-                                shutil.rmtree(d)
-                            shutil.copytree(s, d)
-                        else:
-                            shutil.copy2(s, d)
-            finally:
-                shutil.rmtree(tmp, ignore_errors=True)
+            if not os.path.isdir(src):
+                raise RuntimeError("Zip invalide : AscensionFR_Perso introuvable.")
+            if os.path.isdir(cible):
+                shutil.rmtree(cible)
+            if os.path.basename(os.path.normpath(src)) == ADDON_NAME:
+                shutil.copytree(src, cible)
+            else:
+                os.makedirs(cible, exist_ok=True)
+                for nom in os.listdir(src):
+                    s, d = os.path.join(src, nom), os.path.join(cible, nom)
+                    if os.path.isdir(s):
+                        if os.path.isdir(d):
+                            shutil.rmtree(d)
+                        shutil.copytree(s, d)
+                    else:
+                        shutil.copy2(s, d)
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
     try:
         os.remove(chemin_zip)
     except OSError:
@@ -212,25 +204,22 @@ class Pill(tk.Frame):
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title(f"AscensionFR Perso  ·  Compagnon {VERSION_COMPAGNON}")
-        self.geometry("640x520")
-        self.minsize(600, 480)
+        self.title(f"AscensionFR Perso  ·  {VERSION_COMPAGNON}")
+        self.geometry("680x580")
+        self.minsize(640, 540)
         self.configure(bg=FOND)
         self.jeu = detecter_jeu()
-        self.derniere = None
-        self.url_zip = None
+        self.derniere = self.url_zip = self.url_exe = None
         self.notes = ""
         self._appliquer_icone()
-
-        self._chrome()
         self._ui()
         self.after(150, self.verifier)
 
     def _appliquer_icone(self):
-        ico = ressource("assets", "icon.ico")
-        png = ressource("assets", "icon.png")
+        ico, png = ressource("assets", "icon.ico"), ressource("assets", "icon.png")
         try:
             if os.path.isfile(ico):
+                self.iconbitmap(default=ico)
                 self.iconbitmap(ico)
         except Exception:
             pass
@@ -241,14 +230,8 @@ class App(tk.Tk):
         except Exception:
             pass
 
-    def _chrome(self):
-        try:
-            self.attributes("-alpha", 0.99)
-        except tk.TclError:
-            pass
-
     def _carte(self, parent, **kw):
-        f = tk.Frame(
+        return tk.Frame(
             parent,
             bg=CARTE,
             highlightbackground=LISERE,
@@ -256,48 +239,58 @@ class App(tk.Tk):
             padx=kw.get("padx", 18),
             pady=kw.get("pady", 16),
         )
-        return f
+
+    def _btn(self, parent, texte, cmd, secondaire=False):
+        if secondaire:
+            return tk.Button(
+                parent, text=texte, command=cmd, bg=CARTE2, fg=TEXTE,
+                activebackground=LISERE, activeforeground=TEXTE, relief="flat",
+                font=("Segoe UI Semibold", 9), padx=14, pady=8, cursor="hand2",
+                highlightthickness=1, highlightbackground=LISERE,
+            )
+        return tk.Button(
+            parent, text=texte, command=cmd, bg=ACCENT, fg="#1a1408",
+            activebackground=ACCENT2, activeforeground="#1a1408", relief="flat",
+            font=("Segoe UI Semibold", 10), padx=18, pady=9, cursor="hand2", borderwidth=0,
+        )
 
     def _ui(self):
         shell = tk.Frame(self, bg=FOND)
-        shell.pack(fill="both", expand=True, padx=22, pady=22)
+        shell.pack(fill="both", expand=True, padx=24, pady=22)
 
-        # En-tête
         head = tk.Frame(shell, bg=FOND)
         head.pack(fill="x")
+        # Logo
+        try:
+            logo_path = ressource("assets", "icon.png")
+            if os.path.isfile(logo_path):
+                self._logo = tk.PhotoImage(file=logo_path)
+                # Reduce if huge
+                try:
+                    self._logo = self._logo.subsample(8, 8)
+                except tk.TclError:
+                    pass
+                tk.Label(head, image=self._logo, bg=FOND).pack(side="left", padx=(0, 12))
+        except Exception:
+            pass
+        titles = tk.Frame(head, bg=FOND)
+        titles.pack(side="left", fill="x")
+        row = tk.Frame(titles, bg=FOND)
+        row.pack(anchor="w")
+        tk.Label(row, text="AscensionFR", bg=FOND, fg=TEXTE, font=("Segoe UI", 22, "bold")).pack(side="left")
+        tk.Label(row, text=" Perso", bg=FOND, fg=ACCENT, font=("Segoe UI", 22, "bold")).pack(side="left")
         tk.Label(
-            head,
-            text="AscensionFR",
-            bg=FOND,
-            fg=TEXTE,
-            font=("Segoe UI", 22, "bold"),
-        ).pack(side="left")
-        tk.Label(
-            head,
-            text=" Perso",
-            bg=FOND,
-            fg=ACCENT,
-            font=("Segoe UI", 22, "bold"),
-        ).pack(side="left")
-        tk.Label(
-            head,
-            text=f"  compagnon {VERSION_COMPAGNON}",
-            bg=FOND,
-            fg=MUTE,
-            font=("Segoe UI", 10),
-        ).pack(side="left", pady=(10, 0))
+            titles,
+            text="Compagnon d’installation & mises à jour",
+            bg=FOND, fg=MUTE, font=("Segoe UI", 10),
+        ).pack(anchor="w", pady=(2, 0))
 
         tk.Label(
             shell,
-            text="Overlay de corrections FR — complète AscensionFR sans jamais l’écraser.",
-            bg=FOND,
-            fg=MUTE,
-            font=("Segoe UI", 10),
-            wraplength=580,
-            justify="left",
-        ).pack(anchor="w", pady=(6, 16))
+            text="Complète AscensionFR sans jamais l’écraser. SmartScreen Windows est normal (exe non signé) : Informations complémentaires → Exécuter quand même.",
+            bg=FOND, fg=MUTE, font=("Segoe UI", 9), wraplength=620, justify="left",
+        ).pack(anchor="w", pady=(12, 14))
 
-        # Statut / compatibilité
         row = tk.Frame(shell, bg=FOND)
         row.pack(fill="x", pady=(0, 12))
         self.pill_perso = Pill(row, "Perso …")
@@ -307,43 +300,26 @@ class App(tk.Tk):
         self.pill_conflit = Pill(row, "Sans conflit", VERT)
         self.pill_conflit.pack(side="left")
 
-        # Carte jeu
         c1 = self._carte(shell)
         c1.pack(fill="x", pady=(0, 12))
-        tk.Label(c1, text="DOSSIER DU JEU", bg=CARTE, fg=MUTE, font=("Segoe UI", 8, "bold")).pack(
-            anchor="w"
-        )
+        tk.Label(c1, text="DOSSIER DU JEU", bg=CARTE, fg=MUTE, font=("Segoe UI", 8, "bold")).pack(anchor="w")
         ligne = tk.Frame(c1, bg=CARTE)
         ligne.pack(fill="x", pady=(8, 0))
         self.var_jeu = tk.StringVar(value=self.jeu)
-        ent = tk.Entry(
-            ligne,
-            textvariable=self.var_jeu,
-            bg=CARTE2,
-            fg=TEXTE,
-            insertbackground=TEXTE,
-            relief="flat",
-            font=("Segoe UI", 10),
-            highlightthickness=1,
-            highlightbackground=LISERE,
-            highlightcolor=ACCENT,
-        )
-        ent.pack(side="left", fill="x", expand=True, ipady=7, padx=(0, 8))
+        tk.Entry(
+            ligne, textvariable=self.var_jeu, bg=CARTE2, fg=TEXTE, insertbackground=TEXTE,
+            relief="flat", font=("Segoe UI", 10), highlightthickness=1,
+            highlightbackground=LISERE, highlightcolor=ACCENT,
+        ).pack(side="left", fill="x", expand=True, ipady=7, padx=(0, 8))
         self._btn(ligne, "Parcourir", self.parcourir, secondaire=True).pack(side="left")
 
-        # Carte versions
         c2 = self._carte(shell)
         c2.pack(fill="x", pady=(0, 12))
-        tk.Label(c2, text="MISE À JOUR", bg=CARTE, fg=MUTE, font=("Segoe UI", 8, "bold")).pack(
-            anchor="w"
-        )
-        self.lbl_version = tk.Label(
-            c2, text="Vérification…", bg=CARTE, fg=TEXTE, font=("Segoe UI", 12, "bold")
-        )
+        tk.Label(c2, text="MISE À JOUR", bg=CARTE, fg=MUTE, font=("Segoe UI", 8, "bold")).pack(anchor="w")
+        self.lbl_version = tk.Label(c2, text="Vérification…", bg=CARTE, fg=TEXTE, font=("Segoe UI", 13, "bold"))
         self.lbl_version.pack(anchor="w", pady=(8, 2))
-        self.lbl_etat = tk.Label(c2, text="", bg=CARTE, fg=MUTE, font=("Segoe UI", 9), wraplength=560, justify="left")
+        self.lbl_etat = tk.Label(c2, text="", bg=CARTE, fg=MUTE, font=("Segoe UI", 9), wraplength=600, justify="left")
         self.lbl_etat.pack(anchor="w")
-
         self.prog = tk.Canvas(c2, height=6, bg=CARTE2, highlightthickness=0)
         self.prog.pack(fill="x", pady=(12, 0))
         self._prog_bar = self.prog.create_rectangle(0, 0, 0, 6, fill=ACCENT, width=0)
@@ -353,27 +329,14 @@ class App(tk.Tk):
         self.btn_maj = self._btn(actions, "Installer / Mettre à jour", self.lancer_maj)
         self.btn_maj.pack(side="left")
         self._btn(actions, "Actualiser", self.verifier, secondaire=True).pack(side="left", padx=(8, 0))
-        self._btn(actions, "GitHub", lambda: webbrowser.open(PAGE_RELEASES), secondaire=True).pack(
-            side="left", padx=(8, 0)
-        )
+        self._btn(actions, "Releases", lambda: webbrowser.open(PAGE_RELEASES), secondaire=True).pack(side="left", padx=(8, 0))
 
-        # Notes
         c3 = self._carte(shell)
         c3.pack(fill="both", expand=True)
-        tk.Label(c3, text="NOTES DE VERSION", bg=CARTE, fg=MUTE, font=("Segoe UI", 8, "bold")).pack(
-            anchor="w"
-        )
+        tk.Label(c3, text="NOTES DE VERSION", bg=CARTE, fg=MUTE, font=("Segoe UI", 8, "bold")).pack(anchor="w")
         self.txt_notes = tk.Text(
-            c3,
-            height=6,
-            bg=CARTE2,
-            fg=MUTE,
-            relief="flat",
-            font=("Segoe UI", 9),
-            wrap="word",
-            highlightthickness=0,
-            padx=10,
-            pady=8,
+            c3, height=7, bg=CARTE2, fg=MUTE, relief="flat", font=("Segoe UI", 9),
+            wrap="word", highlightthickness=0, padx=10, pady=8,
         )
         self.txt_notes.pack(fill="both", expand=True, pady=(8, 0))
         self.txt_notes.insert("1.0", "—")
@@ -382,53 +345,9 @@ class App(tk.Tk):
         pied = tk.Frame(shell, bg=FOND)
         pied.pack(fill="x", pady=(12, 0))
         tk.Label(
-            pied,
-            text=f"github.com/{DEPOT}  ·  n’écrit que dans AddOns\\{ADDON_NAME}",
-            bg=FOND,
-            fg=MUTE,
-            font=("Segoe UI", 8),
+            pied, text=f"github.com/{DEPOT}  ·  écrit seulement AddOns\\{ADDON_NAME}",
+            bg=FOND, fg=MUTE, font=("Segoe UI", 8),
         ).pack(side="left")
-        tk.Label(
-            pied,
-            text="Joue tranquillement — mets à jour après la session.",
-            bg=FOND,
-            fg=MUTE,
-            font=("Segoe UI", 8),
-        ).pack(side="right")
-
-    def _btn(self, parent, texte, cmd, secondaire=False):
-        if secondaire:
-            return tk.Button(
-                parent,
-                text=texte,
-                command=cmd,
-                bg=CARTE2,
-                fg=TEXTE,
-                activebackground=LISERE,
-                activeforeground=TEXTE,
-                relief="flat",
-                font=("Segoe UI Semibold", 9),
-                padx=14,
-                pady=8,
-                cursor="hand2",
-                highlightthickness=1,
-                highlightbackground=LISERE,
-            )
-        return tk.Button(
-            parent,
-            text=texte,
-            command=cmd,
-            bg=ACCENT,
-            fg="#1a1408",
-            activebackground=ACCENT2,
-            activeforeground="#1a1408",
-            relief="flat",
-            font=("Segoe UI Semibold", 10),
-            padx=18,
-            pady=9,
-            cursor="hand2",
-            borderwidth=0,
-        )
 
     def set_prog(self, ratio):
         self.prog.update_idletasks()
@@ -441,14 +360,13 @@ class App(tk.Tk):
     def set_notes(self, texte):
         self.txt_notes.configure(state="normal")
         self.txt_notes.delete("1.0", "end")
-        self.txt_notes.insert("1.0", texte or "Pas de notes pour cette release.")
+        self.txt_notes.insert("1.0", texte or "Pas de notes.")
         self.txt_notes.configure(state="disabled")
 
     def parcourir(self):
         chemin = filedialog.askdirectory(title="Dossier Ascension (ascension-live)")
         if chemin:
             self.var_jeu.set(chemin)
-            self.jeu = chemin
             cfg = charger_config()
             cfg["jeu"] = chemin
             sauver_config(cfg)
@@ -459,90 +377,70 @@ class App(tk.Tk):
         self.btn_maj.configure(state="disabled")
         self.lbl_version.configure(text="Contact GitHub…")
         self.set_prog(0)
-        self.etat("Vérification de la dernière release…", MUTE)
 
         def travail():
             try:
-                derniere, url, notes = derniere_release()
+                derniere, url_zip, url_exe, notes = derniere_release()
                 err = None
             except Exception as e:
-                derniere, url, notes, err = None, None, "", str(e)
-            self.after(0, lambda: self._apres_verif(derniere, url, notes, err))
+                derniere = url_zip = url_exe = None
+                notes, err = "", str(e)
+            self.after(0, lambda: self._apres_verif(derniere, url_zip, url_exe, notes, err))
 
         threading.Thread(target=travail, daemon=True).start()
 
-    def _apres_verif(self, derniere, url, notes, err):
-        self.derniere, self.url_zip, self.notes = derniere, url, notes
+    def _apres_verif(self, derniere, url_zip, url_exe, notes, err):
+        self.derniere, self.url_zip, self.url_exe = derniere, url_zip, url_exe
         self.set_notes(notes)
-
         if not jeu_valide(self.jeu):
             self.lbl_version.configure(text="Choisis le dossier du jeu")
-            self.etat("Dossier invalide — cherche le dossier qui contient Interface\\AddOns.", ORANGE)
-            self.pill_perso.set("Perso absent", MUTE)
-            self.pill_officiel.set("Jeu ?", MUTE)
+            self.etat("Dossier invalide — Interface\\AddOns introuvable.", ORANGE)
             self.btn_maj.configure(state="disabled")
             return
-
         inst = version_installee(self.jeu)
         off = version_installee(self.jeu, OFFICIEL)
-        if off:
-            self.pill_officiel.set(f"AscensionFR {off}", BLEU)
-        else:
-            self.pill_officiel.set("AscensionFR absent", ORANGE)
-
+        self.pill_officiel.set(f"AscensionFR {off}" if off else "AscensionFR absent", BLEU if off else ORANGE)
         self.pill_conflit.set("Sans conflit · dossiers séparés", VERT)
-
         if err:
             self.lbl_version.configure(text=f"Installée : {inst or '—'}")
             self.etat(f"GitHub injoignable : {err}", ROUGE)
-            self.pill_perso.set(f"Perso {inst}" if inst else "Perso ?", MUTE)
             self.btn_maj.configure(state="disabled")
             return
-
         if not inst:
             self.pill_perso.set("Perso non installé", ORANGE)
             self.lbl_version.configure(text=f"Dernière release : {derniere or '?'}")
             self.btn_maj.configure(state="normal", text="Installer AscensionFR Perso")
-            self.etat("Prêt — un clic installe l’overlay à côté d’AscensionFR.", VERT)
+            self.etat("Un clic installe l’overlay à côté d’AscensionFR.", VERT)
         elif derniere and en_tuple(derniere) > en_tuple(inst):
             self.pill_perso.set(f"Perso {inst} → {derniere}", ORANGE)
-            self.lbl_version.configure(text=f"Mise à jour disponible  ·  {inst}  →  {derniere}")
+            self.lbl_version.configure(text=f"Mise à jour  ·  {inst}  →  {derniere}")
             self.btn_maj.configure(state="normal", text="Mettre à jour")
-            self.etat("Tu peux finir ta session : mets à jour après avoir quitté le jeu.", ORANGE)
+            self.etat("Tu peux finir ta session, mets à jour après.", ORANGE)
         else:
             self.pill_perso.set(f"Perso {inst}", VERT)
-            self.lbl_version.configure(text=f"À jour  ·  version {inst}")
+            self.lbl_version.configure(text=f"À jour  ·  {inst}")
             self.btn_maj.configure(state="normal", text="Réinstaller")
-            self.etat("Tout est bon. Joue — reviens ici pour les prochaines versions.", VERT)
-
-        if not url:
+            self.etat("Tout est bon.", VERT)
+        if not url_zip:
             self.btn_maj.configure(state="disabled")
-            self.etat(f"Asset {ZIP_ATTENDU} manquant sur la release. {PAGE_RELEASES}", ORANGE)
+            self.etat(f"Asset {ZIP_ATTENDU} manquant. {PAGE_RELEASES}", ORANGE)
 
     def lancer_maj(self):
         if not self.url_zip:
             messagebox.showerror("Erreur", "Aucune URL de zip.")
             return
-        if not jeu_valide(self.var_jeu.get().strip()):
-            messagebox.showerror("Erreur", "Dossier du jeu invalide.")
-            return
         self.btn_maj.configure(state="disabled", text="Téléchargement…")
-        self.etat("Téléchargement…", MUTE)
-        url = self.url_zip
-        jeu = self.var_jeu.get().strip()
+        url, jeu = self.url_zip, self.var_jeu.get().strip()
 
         def travail():
             try:
                 def prog(fait, total):
-                    ratio = (fait / total) if total else 0
-                    if total:
-                        txt = f"Téléchargement… {fait * 100 // total} %"
-                    else:
-                        txt = f"Téléchargement… {fait / 1048576:.1f} Mo"
-                    self.after(0, lambda: (self.etat(txt, MUTE), self.set_prog(ratio or 0.05)))
+                    ratio = (fait / total) if total else 0.05
+                    txt = f"Téléchargement… {fait * 100 // total} %" if total else f"Téléchargement… {fait/1048576:.1f} Mo"
+                    self.after(0, lambda: (self.etat(txt, MUTE), self.set_prog(ratio)))
 
-                chemin = telecharger(url, prog)
-                self.after(0, lambda: (self.etat("Installation (Perso uniquement)…", MUTE), self.set_prog(0.92)))
+                chemin = telecharger(url, prog, ".zip")
+                self.after(0, lambda: (self.etat("Installation…", MUTE), self.set_prog(0.92)))
                 installer_zip(chemin, jeu)
                 cfg = charger_config()
                 cfg["jeu"] = jeu
@@ -555,10 +453,7 @@ class App(tk.Tk):
 
     def _ok(self):
         self.set_prog(1)
-        self.etat(
-            "Installé. Au prochain login : AddOns → AscensionFR Perso coché, puis /reload (ou relance).",
-            VERT,
-        )
+        self.etat("Installé. En jeu : /reload puis /afrp pour le menu.", VERT)
         self.verifier()
 
     def _fail(self, msg):
