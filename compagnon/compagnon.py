@@ -10,6 +10,7 @@ import json
 import os
 import re
 import shutil
+import sys
 import tempfile
 import threading
 import webbrowser
@@ -25,11 +26,20 @@ PAGE_REPO = f"https://github.com/{DEPOT}"
 ZIP_ATTENDU = "AscensionFR_Perso.zip"
 ADDON_NAME = "AscensionFR_Perso"
 OFFICIEL = "AscensionFR"
-VERSION_COMPAGNON = "0.2.0"
+VERSION_COMPAGNON = "0.2.1"
 UA = {"User-Agent": "AscensionFR-Perso-Compagnon/0.2"}
 
 CONFIG_DIR = os.path.join(os.environ.get("APPDATA", "."), "AscensionFR_Perso")
 CONFIG = os.path.join(CONFIG_DIR, "compagnon.json")
+
+
+def ressource(*parts):
+    """Fichier embarqué (PyInstaller) ou voisin du script."""
+    if getattr(sys, "frozen", False):
+        base = getattr(sys, "_MEIPASS", os.path.dirname(sys.executable))
+    else:
+        base = os.path.dirname(os.path.abspath(__file__))
+    return os.path.join(base, *parts)
 
 # Palette launcher sombre + or (proche AscensionFR, plus épurée)
 FOND = "#0a0c0f"
@@ -210,10 +220,26 @@ class App(tk.Tk):
         self.derniere = None
         self.url_zip = None
         self.notes = ""
+        self._appliquer_icone()
 
         self._chrome()
         self._ui()
         self.after(150, self.verifier)
+
+    def _appliquer_icone(self):
+        ico = ressource("assets", "icon.ico")
+        png = ressource("assets", "icon.png")
+        try:
+            if os.path.isfile(ico):
+                self.iconbitmap(ico)
+        except Exception:
+            pass
+        try:
+            if os.path.isfile(png):
+                self._icon_img = tk.PhotoImage(file=png)
+                self.iconphoto(True, self._icon_img)
+        except Exception:
+            pass
 
     def _chrome(self):
         try:
