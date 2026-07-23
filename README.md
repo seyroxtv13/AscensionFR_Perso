@@ -49,4 +49,4 @@ powershell -File ..\scripts\publish_release.ps1
 
 ## Licence
 
-Projet perso. Non affilié à Blizzard / Project Ascension / AscensionFR officiel.
+Projet perso. Non affilié à / Project Ascension / AscensionFR officiel.
