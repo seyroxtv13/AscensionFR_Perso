@@ -1,25 +1,17 @@
-# Build le zip de release (structure Interface/AddOns/AscensionFR_Perso)
+# Build AscensionFR_Perso.zip (structure Interface/AddOns/...)
 $ErrorActionPreference = "Stop"
 $root = Split-Path -Parent $PSScriptRoot
-if (-not (Test-Path "$root\AscensionFR_Perso.toc")) {
-  $root = $PSScriptRoot
-  if (-not (Test-Path "$root\AscensionFR_Perso.toc")) {
-    $root = Split-Path -Parent $MyInvocation.MyCommand.Path
-  }
+if (-not (Test-Path (Join-Path $root "AscensionFR_Perso.toc"))) {
+  throw "TOC introuvable sous $root"
 }
-# script in scripts/ or root — detect
-if (Test-Path ".\AscensionFR_Perso.toc") { $root = (Get-Location).Path }
-
 $dist = Join-Path $root "dist"
 New-Item -ItemType Directory -Force -Path $dist | Out-Null
-$stage = Join-Path $env:TEMP "afrp_stage_$(Get-Random)"
+$stage = Join-Path $env:TEMP ("afrp_stage_" + [guid]::NewGuid().ToString("N").Substring(0, 8))
 $addonStage = Join-Path $stage "Interface\AddOns\AscensionFR_Perso"
-New-Item -ItemType Directory -Force -Path $addonStage, "$addonStage\DB", "$addonStage\Modules" | Out-Null
-
-Copy-Item "$root\AscensionFR_Perso.toc","$root\Core.lua" -Destination $addonStage
-Copy-Item "$root\DB\Phrases.lua" -Destination "$addonStage\DB\"
-Copy-Item "$root\Modules\UI.lua" -Destination "$addonStage\Modules\"
-
+New-Item -ItemType Directory -Force -Path $addonStage, (Join-Path $addonStage "DB"), (Join-Path $addonStage "Modules") | Out-Null
+Copy-Item (Join-Path $root "AscensionFR_Perso.toc"), (Join-Path $root "Core.lua") -Destination $addonStage -Force
+Copy-Item (Join-Path $root "DB\Phrases.lua") -Destination (Join-Path $addonStage "DB") -Force
+Copy-Item (Join-Path $root "Modules\UI.lua") -Destination (Join-Path $addonStage "Modules") -Force
 $zip = Join-Path $dist "AscensionFR_Perso.zip"
 if (Test-Path $zip) { Remove-Item $zip -Force }
 Compress-Archive -Path (Join-Path $stage "Interface") -DestinationPath $zip -Force
